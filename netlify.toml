@@ -4,6 +4,6 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "https://YOUR-RENDER-SERVICE.onrender.com/:splat"
+  to = "https://website-carbon-api.onrender.com/:splat"
   status = 200
   force = true
