@@ -2,58 +2,65 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>EcoMetrics – Website Carbon & Cost Checker</title>
+  <title>EcoMetrics — Website Carbon & Cost Checker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Measure your page weight, estimate CO₂ per 1,000 views, and bandwidth costs in seconds." />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
-  <meta property="og:title" content="EcoMetrics – Website Carbon & Cost Checker" />
-  <meta property="og:description" content="Paste a URL → get CO₂ and cost estimates. Optimize with actionable tips." />
-  <meta property="og:type" content="website" />
+  <meta name="description" content="Measure page weight, estimate CO₂ per 1,000 views, and bandwidth cost. Dashboard with charts, asset breakdown, and optimization tips." />
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <header class="site-header">
-    <div class="wrapper">
+    <div class="wrapper header-bar">
       <a class="brand" href="/">
-        <span class="logo">🌱</span>
-        <span>EcoMetrics</span>
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" role="img" aria-label="EcoMetrics mark">
+            <rect x="2" y="3" width="8" height="18" rx="2" fill="#3B82F6"></rect>
+            <rect x="14" y="3" width="8" height="8" rx="2" fill="#10B981"></rect>
+            <rect x="14" y="13" width="8" height="8" rx="2" fill="#0EA5E9" opacity="0.85"></rect>
+          </svg>
+        </span>
+        <span class="brand-text">EcoMetrics</span>
       </a>
       <nav class="nav">
+        <a href="#dashboard">Dashboard</a>
         <a href="#how">How it works</a>
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
-        <a class="btn btn-sm btn-ghost" href="mailto:hello@ecometrics.live">Contact</a>
+        <a class="btn btn-ghost btn-sm" href="mailto:hello@ecometrics.live">Contact</a>
       </nav>
     </div>
   </header>
 
   <main>
+    <!-- Hero & Audit -->
     <section class="hero">
       <div class="wrapper hero-grid">
         <div class="hero-copy">
           <h1>Measure website impact in seconds</h1>
-          <p class="sub">Paste a URL to estimate page size, <strong>CO₂ per 1,000 views</strong>, and <strong>bandwidth cost</strong>. Get actionable tips to reduce both.</p>
-          <ul class="trust">
-            <li>⚡ Fast results</li>
-            <li>🧩 Actionable tips</li>
-            <li>🧾 ESG-friendly reporting</li>
+          <p class="lead">
+            Paste a URL to estimate total transfer size, CO₂ per 1,000 views, and bandwidth cost.
+            View trends on the dashboard and receive prioritized optimization guidance.
+          </p>
+          <ul class="points" role="list">
+            <li>Deterministic metrics</li>
+            <li>Interactive charts</li>
+            <li>Actionable recommendations</li>
           </ul>
         </div>
 
         <div class="card audit-card">
-          <form id="audit-form">
+          <form id="audit-form" novalidate>
             <label for="url">Page URL</label>
             <div class="input-row">
-              <input id="url" name="url" type="url" placeholder="https://example.com" required />
+              <input id="url" name="url" type="url" inputmode="url" placeholder="https://example.com" required />
               <button class="btn" type="submit" id="runBtn">Run audit</button>
             </div>
             <small class="note">
               Defaults: <code>0.81 kWh/GB</code>, <code>475 gCO₂/kWh</code>, <code>$0.08/GB</code>
             </small>
-            <div id="toast" class="toast hidden"></div>
+            <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
           </form>
 
-          <div id="results" class="results hidden">
+          <div id="results" class="results hidden" aria-live="polite">
             <div class="metrics">
               <div class="metric">
                 <div class="label">Total transfer (first view)</div>
@@ -70,7 +77,7 @@
             </div>
 
             <details class="assets">
-              <summary>Show asset breakdown</summary>
+              <summary>Asset breakdown</summary>
               <table id="assetsTable">
                 <thead>
                   <tr><th>Type</th><th>URL</th><th>Size</th></tr>
@@ -82,35 +89,95 @@
             <div id="tips" class="tips"></div>
           </div>
 
-          <div id="loading" class="loading hidden">
-            <div class="spinner"></div>
+          <div id="loading" class="loading hidden" role="status" aria-live="assertive">
+            <div class="spinner" aria-hidden="true"></div>
             <div>Auditing… this may take a few seconds.</div>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Dashboard -->
+    <section id="dashboard" class="section">
+      <div class="wrapper">
+        <h2>Dashboard</h2>
+        <div class="kpis">
+          <div class="kpi">
+            <div class="kpi-label">Avg CO₂ / 1k views</div>
+            <div class="kpi-value" id="kpiCo2">—</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Avg cost / 1k views</div>
+            <div class="kpi-value" id="kpiCost">—</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Avg page weight</div>
+            <div class="kpi-value" id="kpiBytes">—</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Audits stored</div>
+            <div class="kpi-value" id="kpiAudits">0</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>Asset mix (latest audit)</h3>
+            <canvas id="chartAssetMix"></canvas>
+            <small class="muted">Distribution of bytes by file type for the most recent audit.</small>
+          </div>
+          <div class="card">
+            <h3>Key metrics (latest audit)</h3>
+            <canvas id="chartLatestBars"></canvas>
+            <small class="muted">Totals for page weight, CO₂ per 1k views, and cost per 1k views.</small>
+          </div>
+        </div>
+
+        <div class="card mt16">
+          <h3>CO₂ trend (last 10 audits)</h3>
+          <canvas id="chartCo2Trend"></canvas>
+          <small class="muted">Stored locally in your browser. Clear with the button below.</small>
+        </div>
+
+        <div class="actions mt12">
+          <button id="clearHistory" class="btn btn-ghost">Clear local history</button>
+          <button id="exportHistory" class="btn">Export CSV</button>
+        </div>
+
+        <div class="card mt16">
+          <h3>Recent audits</h3>
+          <table id="historyTable">
+            <thead>
+              <tr><th>Date</th><th>URL</th><th>Bytes</th><th>CO₂ /1k</th><th>Cost /1k</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- How / Pricing / FAQ -->
     <section id="how" class="section">
       <div class="wrapper">
         <h2>How it works</h2>
         <div class="steps">
-          <div class="step"><span class="badge">1</span> We fetch your page HTML and key assets.</div>
-          <div class="step"><span class="badge">2</span> We estimate energy, CO₂, and bandwidth cost from total bytes.</div>
-          <div class="step"><span class="badge">3</span> You get prioritized tips to reduce weight and emissions.</div>
+          <div class="step"><span class="badge">1</span> Fetch page HTML and key assets.</div>
+          <div class="step"><span class="badge">2</span> Estimate energy, CO₂, and bandwidth cost from total bytes.</div>
+          <div class="step"><span class="badge">3</span> Provide prioritized optimization recommendations.</div>
         </div>
       </div>
     </section>
 
     <section id="pricing" class="section">
       <div class="wrapper">
-        <h2>Simple pricing</h2>
+        <h2>Pricing</h2>
         <div class="pricing-grid">
           <div class="price-card">
             <h3>Free</h3>
             <p class="price">$0</p>
             <ul>
               <li>3 audits / month</li>
-              <li>Basic metrics</li>
+              <li>Core metrics</li>
               <li>Public results</li>
             </ul>
             <a class="btn btn-ghost" href="#">Use free</a>
@@ -118,7 +185,7 @@
           <div class="price-card featured">
             <div class="ribbon">Most popular</div>
             <h3>Pro</h3>
-            <p class="price">$19<span>/mo</span></p>
+            <p class="price">$19<span>/month</span></p>
             <ul>
               <li>Unlimited audits</li>
               <li>PDF exports</li>
@@ -128,7 +195,7 @@
           </div>
           <div class="price-card">
             <h3>Business</h3>
-            <p class="price">$99<span>/mo</span></p>
+            <p class="price">$99<span>/month</span></p>
             <ul>
               <li>Team seats</li>
               <li>Multi-domain dashboards</li>
@@ -143,9 +210,26 @@
     <section id="faq" class="section">
       <div class="wrapper">
         <h2>FAQ</h2>
-        <details><summary>How accurate are the numbers?</summary><p>They’re reasonable estimates based on page weight and standard intensity factors. For compliance-grade reporting, you can customize factors per region/host.</p></details>
-        <details><summary>Which pages work best?</summary><p>Public pages that don’t require login. Some sites block bots; results may vary. We include tips regardless.</p></details>
-        <details><summary>Do you store my results?</summary><p>Free plan results may be cached to improve speed; Pro plan adds private history.</p></details>
+        <details open>
+          <summary>How accurate are the estimates?</summary>
+          <p>Estimates are based on total transferred bytes combined with configurable intensity factors (kWh/GB, gCO₂/kWh, and bandwidth cost/GB). Actual emissions can vary by data center region, CDN configuration, and caching. For compliance reporting, you can supply region-specific factors to improve precision.</p>
+        </details>
+        <details>
+          <summary>What types of pages work best?</summary>
+          <p>Public pages without authentication. Some sites block automated requests; when that happens, we return a best-effort result based on accessible assets. You’ll still receive optimization recommendations derived from the assets we can analyze.</p>
+        </details>
+        <details>
+          <summary>Do you store my data?</summary>
+          <p>By default, audits on this demo are stored locally in your browser (no server storage). Pro/Business plans will support private cloud storage, team access, and exportable audit history.</p>
+        </details>
+        <details>
+          <summary>How should I interpret CO₂ per 1,000 views?</summary>
+          <p>It approximates emissions for a thousand page views of the audited page. Use it to compare pages, track improvements over time, and estimate impact at your traffic volumes (e.g., 50k views ≈ 50 × the 1k figure).</p>
+        </details>
+        <details>
+          <summary>How can I reduce my numbers quickly?</summary>
+          <p>Compress large images, use modern formats (WebP/AVIF), defer or remove non-critical scripts, enable Brotli/gzip compression, and leverage a CDN with caching. Our recommendations list flags the largest opportunities by asset type.</p>
+        </details>
       </div>
     </section>
   </main>
@@ -153,8 +237,8 @@
   <footer class="site-footer">
     <div class="wrapper footer-grid">
       <div>
-        <div class="brand"><span class="logo">🌱</span> EcoMetrics</div>
-        <small>© <span id="year"></span> EcoMetrics. Built for faster, greener web.</small>
+        <div class="brand-inline">EcoMetrics</div>
+        <small>© <span id="year"></span> EcoMetrics. Faster, lower-impact web.</small>
       </div>
       <div class="links">
         <a href="#pricing">Pricing</a>
@@ -164,6 +248,8 @@
     </div>
   </footer>
 
+  <!-- Chart.js (CDN) for dashboards -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-PL9qHqS4n8au2kP3kzqA6iDqP0m2XrE2J4zq2z8tF2sVwz7A1m0S+7q3mB7mO5mX" crossorigin="anonymous"></script>
   <script src="./app.js"></script>
 </body>
 </html>
