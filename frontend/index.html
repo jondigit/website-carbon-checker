@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Website Carbon & Cost Checker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>Website Carbon & Cost Checker</h1>
+      <p>Paste any URL to estimate page size, CO₂ per 1,000 views, and bandwidth cost.</p>
+    </header>
+
+    <section class="card">
+      <form id="audit-form">
+        <label for="url">Page URL</label>
+        <input id="url" name="url" type="url" placeholder="https://example.com" required />
+        <button type="submit">Run audit</button>
+      </form>
+      <div id="note">
+        <small>
+          Estimates use defaults: <code>0.81 kWh/GB</code> energy, <code>475 gCO₂/kWh</code> carbon intensity,
+          <code>$0.08/GB</code> transfer cost.
+        </small>
+      </div>
+    </section>
+
+    <section id="results" class="card hidden">
+      <h2>Results</h2>
+      <div class="grid">
+        <div class="metric">
+          <div class="label">Total transfer (first view)</div>
+          <div class="value" id="bytesTotal">—</div>
+        </div>
+        <div class="metric">
+          <div class="label">CO₂ per 1,000 views</div>
+          <div class="value" id="co2">—</div>
+        </div>
+        <div class="metric">
+          <div class="label">Cost per 1,000 views</div>
+          <div class="value" id="cost">—</div>
+        </div>
+      </div>
+
+      <details>
+        <summary>Show asset breakdown</summary>
+        <table id="assetsTable">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>URL</th>
+              <th>Size</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </details>
+
+      <div id="tips"></div>
+    </section>
+
+    <footer>
+      <p>Made with Netlify (frontend) + Render (API). Open source on GitHub.</p>
+    </footer>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>
