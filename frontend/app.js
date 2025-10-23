@@ -1,7 +1,7 @@
-// In dev (localhost) call the API directly; in production use Netlify proxy (/api/*)
+// Hard-coded production API URL (bypasses Netlify proxy)
 const API_BASE = (window.location.hostname === 'localhost')
   ? 'http://localhost:8080'
-  : ''; // production uses Netlify proxy at /api/*
+  : 'https://website-carbon-api.onrender.com'; // <-- your Render URL
 
 const form = document.getElementById('audit-form');
 const results = document.getElementById('results');
