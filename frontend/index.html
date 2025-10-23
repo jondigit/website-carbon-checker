@@ -2,69 +2,168 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Website Carbon & Cost Checker</title>
+  <title>EcoMetrics – Website Carbon & Cost Checker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Measure your page weight, estimate CO₂ per 1,000 views, and bandwidth costs in seconds." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+  <meta property="og:title" content="EcoMetrics – Website Carbon & Cost Checker" />
+  <meta property="og:description" content="Paste a URL → get CO₂ and cost estimates. Optimize with actionable tips." />
+  <meta property="og:type" content="website" />
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <main class="container">
-    <header>
-      <h1>Website Carbon & Cost Checker</h1>
-      <p>Paste any URL to estimate page size, CO₂ per 1,000 views, and bandwidth cost.</p>
-    </header>
+  <header class="site-header">
+    <div class="wrapper">
+      <a class="brand" href="/">
+        <span class="logo">🌱</span>
+        <span>EcoMetrics</span>
+      </a>
+      <nav class="nav">
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a class="btn btn-sm btn-ghost" href="mailto:hello@ecometrics.live">Contact</a>
+      </nav>
+    </div>
+  </header>
 
-    <section class="card">
-      <form id="audit-form">
-        <label for="url">Page URL</label>
-        <input id="url" name="url" type="url" placeholder="https://example.com" required />
-        <button type="submit">Run audit</button>
-      </form>
-      <div id="note">
-        <small>
-          Estimates use defaults: <code>0.81 kWh/GB</code> energy, <code>475 gCO₂/kWh</code> carbon intensity,
-          <code>$0.08/GB</code> transfer cost.
-        </small>
+  <main>
+    <section class="hero">
+      <div class="wrapper hero-grid">
+        <div class="hero-copy">
+          <h1>Measure website impact in seconds</h1>
+          <p class="sub">Paste a URL to estimate page size, <strong>CO₂ per 1,000 views</strong>, and <strong>bandwidth cost</strong>. Get actionable tips to reduce both.</p>
+          <ul class="trust">
+            <li>⚡ Fast results</li>
+            <li>🧩 Actionable tips</li>
+            <li>🧾 ESG-friendly reporting</li>
+          </ul>
+        </div>
+
+        <div class="card audit-card">
+          <form id="audit-form">
+            <label for="url">Page URL</label>
+            <div class="input-row">
+              <input id="url" name="url" type="url" placeholder="https://example.com" required />
+              <button class="btn" type="submit" id="runBtn">Run audit</button>
+            </div>
+            <small class="note">
+              Defaults: <code>0.81 kWh/GB</code>, <code>475 gCO₂/kWh</code>, <code>$0.08/GB</code>
+            </small>
+            <div id="toast" class="toast hidden"></div>
+          </form>
+
+          <div id="results" class="results hidden">
+            <div class="metrics">
+              <div class="metric">
+                <div class="label">Total transfer (first view)</div>
+                <div class="value" id="bytesTotal">—</div>
+              </div>
+              <div class="metric">
+                <div class="label">CO₂ per 1,000 views</div>
+                <div class="value" id="co2">—</div>
+              </div>
+              <div class="metric">
+                <div class="label">Cost per 1,000 views</div>
+                <div class="value" id="cost">—</div>
+              </div>
+            </div>
+
+            <details class="assets">
+              <summary>Show asset breakdown</summary>
+              <table id="assetsTable">
+                <thead>
+                  <tr><th>Type</th><th>URL</th><th>Size</th></tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </details>
+
+            <div id="tips" class="tips"></div>
+          </div>
+
+          <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <div>Auditing… this may take a few seconds.</div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="results" class="card hidden">
-      <h2>Results</h2>
-      <div class="grid">
-        <div class="metric">
-          <div class="label">Total transfer (first view)</div>
-          <div class="value" id="bytesTotal">—</div>
-        </div>
-        <div class="metric">
-          <div class="label">CO₂ per 1,000 views</div>
-          <div class="value" id="co2">—</div>
-        </div>
-        <div class="metric">
-          <div class="label">Cost per 1,000 views</div>
-          <div class="value" id="cost">—</div>
+    <section id="how" class="section">
+      <div class="wrapper">
+        <h2>How it works</h2>
+        <div class="steps">
+          <div class="step"><span class="badge">1</span> We fetch your page HTML and key assets.</div>
+          <div class="step"><span class="badge">2</span> We estimate energy, CO₂, and bandwidth cost from total bytes.</div>
+          <div class="step"><span class="badge">3</span> You get prioritized tips to reduce weight and emissions.</div>
         </div>
       </div>
-
-      <details>
-        <summary>Show asset breakdown</summary>
-        <table id="assetsTable">
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>URL</th>
-              <th>Size</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </details>
-
-      <div id="tips"></div>
     </section>
 
-    <footer>
-      <p>Made with Netlify (frontend) + Render (API). Open source on GitHub.</p>
-    </footer>
+    <section id="pricing" class="section">
+      <div class="wrapper">
+        <h2>Simple pricing</h2>
+        <div class="pricing-grid">
+          <div class="price-card">
+            <h3>Free</h3>
+            <p class="price">$0</p>
+            <ul>
+              <li>3 audits / month</li>
+              <li>Basic metrics</li>
+              <li>Public results</li>
+            </ul>
+            <a class="btn btn-ghost" href="#">Use free</a>
+          </div>
+          <div class="price-card featured">
+            <div class="ribbon">Most popular</div>
+            <h3>Pro</h3>
+            <p class="price">$19<span>/mo</span></p>
+            <ul>
+              <li>Unlimited audits</li>
+              <li>PDF exports</li>
+              <li>API access</li>
+            </ul>
+            <a class="btn" href="#">Get Pro</a>
+          </div>
+          <div class="price-card">
+            <h3>Business</h3>
+            <p class="price">$99<span>/mo</span></p>
+            <ul>
+              <li>Team seats</li>
+              <li>Multi-domain dashboards</li>
+              <li>White-label reports</li>
+            </ul>
+            <a class="btn btn-ghost" href="#">Talk to sales</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <div class="wrapper">
+        <h2>FAQ</h2>
+        <details><summary>How accurate are the numbers?</summary><p>They’re reasonable estimates based on page weight and standard intensity factors. For compliance-grade reporting, you can customize factors per region/host.</p></details>
+        <details><summary>Which pages work best?</summary><p>Public pages that don’t require login. Some sites block bots; results may vary. We include tips regardless.</p></details>
+        <details><summary>Do you store my results?</summary><p>Free plan results may be cached to improve speed; Pro plan adds private history.</p></details>
+      </div>
+    </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="wrapper footer-grid">
+      <div>
+        <div class="brand"><span class="logo">🌱</span> EcoMetrics</div>
+        <small>© <span id="year"></span> EcoMetrics. Built for faster, greener web.</small>
+      </div>
+      <div class="links">
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="mailto:hello@ecometrics.live">Contact</a>
+      </div>
+    </div>
+  </footer>
+
   <script src="./app.js"></script>
 </body>
 </html>
