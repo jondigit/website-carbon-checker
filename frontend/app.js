@@ -1,7 +1,7 @@
 // In dev (localhost) call the API directly; in production use Netlify proxy (/api/*)
 const API_BASE = (window.location.hostname === 'localhost')
   ? 'http://localhost:8080'
-  : ''; // use relative /api in production via netlify.toml proxy
+  : ''; // production uses Netlify proxy at /api/*
 
 const form = document.getElementById('audit-form');
 const results = document.getElementById('results');
