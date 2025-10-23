@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: website-carbon-api
+    env: node
+    rootDir: api
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    plan: free
+    envVars:
+      - key: ENERGY_KWH_PER_GB
+        value: "0.81"
+      - key: CARBON_G_PER_KWH
+        value: "475"
+      - key: COST_USD_PER_GB
+        value: "0.08"
+      - key: ALLOW_ORIGIN_1
+        value: "https://YOUR-NETLIFY-SITE.netlify.app"
