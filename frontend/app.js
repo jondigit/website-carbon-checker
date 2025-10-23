@@ -1,6 +1,7 @@
+// In dev (localhost) call the API directly; in production use Netlify proxy (/api/*)
 const API_BASE = (window.location.hostname === 'localhost')
   ? 'http://localhost:8080'
-  : 'https://YOUR-RENDER-SERVICE.onrender.com'; // replace after deploying API
+  : ''; // use relative /api in production via netlify.toml proxy
 
 const form = document.getElementById('audit-form');
 const results = document.getElementById('results');
